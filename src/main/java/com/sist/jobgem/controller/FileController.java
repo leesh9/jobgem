@@ -2,6 +2,8 @@ package com.sist.jobgem.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -36,20 +38,23 @@ public class FileController {
         }
     }
 
-    @Operation(summary = "파일 다운로드", description = "선택한 파일 다운받기")
-    @GetMapping("/download/{filename}")
-    public ResponseEntity<UrlResource> downloadFile(@PathVariable("filename") String filename) {
-        try {
-            UrlResource urlResource = s3UploadService.downloadImage(filename);
-            String contentDisposition = s3UploadService.getContentDisposition(filename);
+@Operation(summary = "파일 다운로드", description = "선택한 파일 다운받기")
+@GetMapping("/download/{filename}")
+public ResponseEntity<UrlResource> downloadFile(@PathVariable("filename") String filename) {
+    try {
+        UrlResource urlResource = s3UploadService.downloadImage(filename);
+        
+        // 파일 이름 UTF-8 인코딩
+        String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8.toString()).replaceAll("\\+", "%20");
+        String contentDisposition = "attachment; filename*=UTF-8''" + encodedFilename;
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                    .body(urlResource);
-        } catch (MalformedURLException e) {
-            return ResponseEntity.badRequest().build(); // 에러 처리
-        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(urlResource);
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().build(); // 에러 처리
     }
+}
 
     @Operation(summary = "파일 삭제", description = "선택한 파일 삭제하기")
     @DeleteMapping("/delete/{filename}")
