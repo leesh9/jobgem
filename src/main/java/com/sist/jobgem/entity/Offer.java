@@ -1,34 +1,33 @@
 package com.sist.jobgem.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 @Getter
-@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "offers")
 public class Offer {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "of_idx", nullable = false)
     private Integer id;
 
-    @NotNull
     @Column(name = "co_idx", nullable = false)
     private Integer coIdx;
 
-    @NotNull
     @Column(name = "jo_idx", nullable = false)
     private Integer joIdx;
 
-    @Size(max = 500)
     @Column(name = "of_content", length = 500)
     private String ofContent;
 
@@ -40,5 +39,21 @@ public class Offer {
 
     @Column(name = "of_state")
     private Integer ofState;
+
+    @ManyToOne
+    @JoinColumn(name = "co_idx", insertable = false, updatable = false)
+    private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "jo_idx", insertable = false, updatable = false)
+    private Jobseeker jobseeker;
+
+    // 엔티티가 처음 저장될 때
+    @PrePersist
+    public void prePersist() {
+        this.ofDate = LocalDate.now();  // 업데이트 시 현재 날짜 설정
+        this.ofState = 1;
+        this.ofType = 1;
+    }
 
 }

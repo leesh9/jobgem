@@ -13,8 +13,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi userGroup() {
         List<Tag> tags = List.of(
-                new Tag().name("UserController").description("유저")
-        );
+                new Tag().name("UserController").description("유저"));
 
         return GroupedOpenApi.builder()
                 .group("user")
@@ -28,8 +27,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi commonGroup() {
         List<Tag> tags = List.of(
-                new Tag().name("CommonController").description("공용 컨트롤러")
-        );
+                new Tag().name("CommonController").description("공용 컨트롤러"));
 
         return GroupedOpenApi.builder()
                 .group("common")
@@ -39,4 +37,45 @@ public class SwaggerConfig {
                 })
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi companyGroup() {
+        return GroupedOpenApi.builder()
+                .group("company")
+                .pathsToMatch("/api/company/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi jobseekerGroup() {
+        return GroupedOpenApi.builder()
+                .group("jobseeker")
+                .pathsToMatch("/api/jobseeker/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi postGroup() {
+        return GroupedOpenApi.builder()
+                .group("posts")
+                .pathsToMatch("/api/posts/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi fileGroup() {
+        return GroupedOpenApi.builder()
+                .group("files")
+                .pathsToMatch("/api/files/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi adminGroup() {
+        return GroupedOpenApi.builder()
+                .group("admin")
+                .pathsToMatch("/api/admin/**")
+                .build();
+    }
+
 }

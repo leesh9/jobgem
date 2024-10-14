@@ -1,44 +1,73 @@
 package com.sist.jobgem.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDate;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@DynamicInsert
 @Getter
-@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "reviews")
 public class Review {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "re_idx", nullable = false)
     private Integer id;
 
-    @NotNull
     @Column(name = "jo_idx", nullable = false)
     private Integer joIdx;
 
-    @NotNull
     @Column(name = "co_idx", nullable = false)
     private Integer coIdx;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "re_title", nullable = false, length = 20)
+    @Column(name = "re_title", nullable = false, length = 50)
     private String reTitle;
 
-    @NotNull
     @Lob
-    @Column(name = "re_content", nullable = false)
+    @Column(name = "re_content", nullable = false, length = 500)
     private String reContent;
 
-    @NotNull
     @Column(name = "re_score", nullable = false)
     private Integer reScore;
 
-    @NotNull
+    @Column(name = "re_write_date", nullable = false)
+    private LocalDate reWriteDate;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.reWriteDate == null) {
+            this.reWriteDate = LocalDate.now();
+        }
+    }
+
+    @ColumnDefault("1")
     @Column(name = "re_state", nullable = false)
     private Integer reState;
 
+    @ManyToOne
+    @JoinColumn(name = "co_idx", insertable = false, updatable = false)
+    private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "jo_idx", insertable = false, updatable = false)
+    private Jobseeker jobseeker;
 }

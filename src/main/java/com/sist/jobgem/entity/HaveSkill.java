@@ -1,34 +1,29 @@
 package com.sist.jobgem.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Entity
-@Table(name = "have_skill")
+@Table(name = "have_skills")
 public class HaveSkill {
     @Id
-    @Column(name = "ce_idx", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hs_idx", nullable = false)
     private Integer id;
 
-    @Size(max = 10)
-    @NotNull
-    @Column(name = "sk_name", nullable = false, length = 10)
-    private String skName;
+    @Column(name = "jo_idx", nullable = false)
+    private Integer joIdx;
 
-    @NotNull
-    @Column(name = "j_idx", nullable = false)
-    private Integer jIdx;
-
-    @NotNull
     @Column(name = "sk_idx", nullable = false)
     private Integer skIdx;
+
+    @ManyToOne
+    @JoinColumn(name = "jo_idx", nullable = false, updatable = false, insertable = false)
+    private Jobseeker jobseeker;
+
+    @ManyToOne
+    @JoinColumn(name = "sk_idx", nullable = false, updatable = false, insertable = false)
+    private Skill skill;
 
 }

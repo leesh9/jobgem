@@ -1,68 +1,79 @@
 package com.sist.jobgem.entity;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-
-import java.time.LocalDate;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "jobseekers")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Jobseeker {
+    
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "jo_idx", nullable = false)
     private Integer id;
 
-    @NotNull
-    @Column(name = "us_idx", nullable = false)
-    private Integer usIdx;
+    @OneToOne
+    @JoinColumn(name = "us_idx", nullable = false)
+    private User user;
 
-    @NotNull
-    @Column(name = "hc_idx", nullable = false)
-    private Integer hcIdx;
-
-    @Size(max = 10)
-    @NotNull
     @Column(name = "jo_name", nullable = false, length = 10)
     private String joName;
 
-    @NotNull
-    @Column(name = "jo_birth", nullable = false)
+    @Column(name = "jo_birth")
     private LocalDate joBirth;
 
-    @Size(max = 30)
-    @NotNull
-    @Column(name = "jo_address", nullable = false, length = 30)
+    @Column(name = "jo_address", length = 30)
     private String joAddress;
 
-    @Size(max = 1)
-    @NotNull
-    @Column(name = "jo_gender", nullable = false, length = 1)
+    @Column(name = "jo_tel", nullable = false, length = 15)
+    private String joTel;
+
+    @Column(name = "jo_gender", length = 1)
     private String joGender;
 
-    @Size(max = 30)
-    @NotNull
-    @Column(name = "jo_imgUrl", nullable = false, length = 30)
-    private String joImgurl;
+    @Column(name = "jo_img_url", length = 100)
+    private String joImgUrl;
 
-    @Size(max = 10)
-    @NotNull
-    @Column(name = "jo_edu", nullable = false, length = 10)
+    @Column(name = "jo_edu", length = 10)
     private String joEdu;
 
-    @Size(max = 10)
     @Column(name = "jo_sal", length = 10)
     private String joSal;
 
-    @NotNull
-    @Column(name = "jo_state", nullable = false)
-    private Integer joState;
+    @ManyToMany
+    @JoinTable(name = "have_skills", joinColumns = @JoinColumn(name = "jo_idx"), inverseJoinColumns = @JoinColumn(name = "sk_idx"))
+    private List<Skill> skills;
 
+
+    // 필드 업데이트 메서드 추가
+    public void updateFields(String joName, LocalDate joBirth, String joAddress, String joTel,
+            String joGender, String joEdu, String joSal, String joImgUrl) {
+        this.joName = joName;
+        this.joBirth = joBirth;
+        this.joAddress = joAddress;
+        this.joTel = joTel;
+        this.joGender = joGender;
+        this.joEdu = joEdu;
+        this.joSal = joSal;
+        this.joImgUrl = joImgUrl;
+    }
 }

@@ -1,29 +1,24 @@
 package com.sist.jobgem.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "hire_kind")
 public class HireKind {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hk_idx", nullable = false)
     private Integer id;
 
-    @Size(max = 30)
     @Column(name = "hk_name", length = 30)
     private String hkName;
-
-    @NotNull
-    @Column(name = "po_idx", nullable = false)
-    private Integer poIdx;
 
 }

@@ -1,96 +1,92 @@
 package com.sist.jobgem.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
-@Setter
 @Entity
+@Builder
 @Table(name = "posts")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "po_idx", nullable = false)
     private Integer id;
 
-    @NotNull
     @Column(name = "co_idx", nullable = false)
     private Integer coIdx;
 
-    @Size(max = 50)
-    @NotNull
     @Column(name = "po_title", nullable = false, length = 50)
     private String poTitle;
 
-    @Size(max = 300)
-    @NotNull
-    @Column(name = "po_content", nullable = false, length = 300)
+    @Column(name = "po_content", nullable = false, columnDefinition = "TEXT")
     private String poContent;
 
-    @NotNull
     @Column(name = "po_date", nullable = false)
     private LocalDate poDate;
 
     @Column(name = "po_deadline")
     private LocalDate poDeadline;
 
-    @Size(max = 10)
-    @Column(name = "po_edu", length = 10)
-    private String poEdu;
-
-    @Size(max = 30)
-    @Column(name = "po_imgUrl", length = 30)
-    private String poImgurl;
-
-    @Size(max = 10)
-    @NotNull
-    @Column(name = "po_location", nullable = false, length = 10)
-    private String poLocation;
-
-    @Size(max = 10)
-    @Column(name = "po_sal", length = 10)
+    @Column(name = "po_sal", length = 20)
     private String poSal;
 
-    @Size(max = 30)
-    @Column(name = "po_prefer", length = 30)
-    private String poPrefer;
+    @Column(name = "ws_start_time")
+    private String wsStartTime;
 
-    @Size(max = 2)
-    @Column(name = "po_career", length = 2)
-    private String poCareer;
+    @Column(name = "ws_end_time")
+    private String wsEndTime;
 
-    @Size(max = 10)
-    @Column(name = "po_type", length = 10)
-    private String poType;
-
-    @Size(max = 15)
-    @Column(name = "po_workhour", length = 15)
-    private String poWorkhour;
-
-    @Column(name = "po_state")
-    private Integer poState;
-
-    @Size(max = 20)
     @Column(name = "po_sub_type", length = 20)
     private String poSubType;
 
-    @Size(max = 20)
     @Column(name = "po_addr", length = 20)
     private String poAddr;
 
-    @Size(max = 30)
     @Column(name = "po_email", length = 30)
     private String poEmail;
 
-    @Size(max = 30)
     @Column(name = "po_fax", length = 30)
     private String poFax;
 
+    @Column(name = "po_state", nullable = false)
+    private Integer poState;
+
+    @ManyToOne
+    @JoinColumn(name = "co_idx", nullable = false, insertable = false, updatable = false)
+    private Company company;
+
+    @ManyToMany
+    @JoinTable(name = "education_bridge", joinColumns = @JoinColumn(name = "po_idx"), inverseJoinColumns = @JoinColumn(name = "ed_idx"))
+    private List<Education> education;
+
+    @ManyToMany
+    @JoinTable(name = "location_bridge", joinColumns = @JoinColumn(name = "po_idx"), inverseJoinColumns = @JoinColumn(name = "lg_idx"))
+    private List<LocationGuSi> locationGuSi;
+
+    @ManyToMany
+    @JoinTable(name = "hk_bridge", joinColumns = @JoinColumn(name = "po_idx"), inverseJoinColumns = @JoinColumn(name = "hk_idx"))
+    private List<HireKind> hireKind;
+
+    @ManyToMany
+    @JoinTable(name = "careers_bridge", joinColumns = @JoinColumn(name = "po_idx"), inverseJoinColumns = @JoinColumn(name = "cr_idx"))
+    private List<Career> career;
+
+    @ManyToMany
+    @JoinTable(name = "skill_bridge", joinColumns = @JoinColumn(name = "po_idx"), inverseJoinColumns = @JoinColumn(name = "sk_idx"))
+    private List<Skill> skill;
+
+    @ManyToMany
+    @JoinTable(name = "post_schedule_days", joinColumns = @JoinColumn(name = "po_idx"), inverseJoinColumns = @JoinColumn(name = "wd_idx"))
+    private List<WorkDay> workDays;
 }

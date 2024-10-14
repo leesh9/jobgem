@@ -1,12 +1,16 @@
 spring:
-    profiles: 
+    profiles:
         active: dev
         include: secret
-    jpa: 
-        hibernate: 
+    jpa:
+        hibernate:
             ddl-auto: update
         properties:
             hibernate:
-                show_sql: true
-                format_sql: true
                 use_sql_comments: true
+            jdbc:
+                time_zone: Asia/Seoul
+decorator:
+    datasource:
+        p6spy:
+            enable-logging: true

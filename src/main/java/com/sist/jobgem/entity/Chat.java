@@ -1,33 +1,48 @@
 package com.sist.jobgem.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "chats")
 public class Chat {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ch_idx", nullable = false)
     private Integer id;
 
-    @NotNull
     @Column(name = "us_idx", nullable = false)
     private Integer usIdx;
 
-    @NotNull
     @Column(name = "cm_idx", nullable = false)
     private Integer cmIdx;
 
-    @Size(max = 100)
-    @Column(name = "ch_content", length = 100)
+    @Column(name = "ch_content", nullable = false, length = 500)
     private String chContent;
 
+    @Column(name = "ch_date", nullable = false)
+    private LocalDateTime chDate;
+
+    @Column(name = "ch_is_read", nullable = false)
+    private Integer chIsRead;
+
+    // 엔티티가 처음 저장될 때
+    @PrePersist
+    public void prePersist() {
+        this.chDate = LocalDateTime.now();
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "us_idx", nullable = false, insertable = false, updatable = false)
+    private User user;
 }
