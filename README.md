@@ -83,25 +83,6 @@
 
 ---
 
-## ⚙ 프로젝트 실행 방법
-
-### 프론트엔드 실행
-
-```bash
-git clone https://github.com/leesh9/jobgem_FE.git
-cd jobgem_FE
-npm install
-npm run dev
-```
-
-### 백엔드 & DB 실행 (Docker 기반)
-
-```bash
-docker-compose up --build
-```
-
----
-
 ## 🎬 시연 영상 및 문서
 
 - 📽️ [프로젝트 시연 영상](https://drive.google.com/drive/folders/10YdCzEgJQF6BDeId5s7Nwq9wmyPz1CVa?usp=drive_link)
